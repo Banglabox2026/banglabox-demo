@@ -564,8 +564,7 @@
 
 <script src="static/js/script.js"></script>
 <script>
-// Hide audio players whose source files don't exist yet (404),
-// replacing them with a subtle "generating…" pill.
+// Replace audio players whose source files return 404 with an "N/A" label.
 document.querySelectorAll('audio').forEach(function(audio) {
   var src = audio.querySelector('source');
   if (!src) return;
@@ -575,7 +574,7 @@ document.querySelectorAll('audio').forEach(function(audio) {
     if (req.status === 404) {
       var pill = document.createElement('span');
       pill.className = 'gen-pill';
-      pill.textContent = '⏳ generating…';
+      pill.textContent = 'N/A';
       audio.parentNode.replaceChild(pill, audio);
     }
   };
