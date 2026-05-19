@@ -23,16 +23,6 @@
     <p class="subtitle">A Phonetically-Balanced Corpus and Data-Efficient Foundation-Model Adaptation for Bangla Text-to-Speech with Zero-Shot Voice Cloning</p>
     <p class="authors">Anonymous Authors</p>
 
-    <div class="badge-row">
-      <!-- TODO: replace with OpenReview anonymous PDF URL after submission -->
-      <a href="#" class="badge"><span>📄</span> Paper (PDF)</a>
-      <!-- TODO: replace with Anonymous4Open URL (https://anonymous.4open.science/r/...) -->
-      <a href="#" class="badge"><span>💾</span> Code (anonymous)</a>
-      <!-- TODO: replace with anonymous Hugging Face model URL -->
-      <a href="#" class="badge"><span>🤗</span> Model Card</a>
-      <a href="#bibtex" class="badge"><span>📋</span> BibTeX</a>
-    </div>
-
     <div class="abstract">
       <p>
         Bangla, spoken by over 230 million native speakers, remains underserved by modern TTS.
@@ -51,247 +41,23 @@
 <!-- ==================== TABLE OF CONTENTS ==================== -->
 <nav class="toc-bar" id="toc">
   <div class="container">
-    <a href="#main">1. Headline Comparison</a>
-    <a href="#cloning">2. Voice Cloning</a>
-    <a href="#longform">3. Long-Form Synthesis</a>
-    <a href="#juktakkhor">4. Juktakkhor</a>
-    <a href="#honorifics">5. Honorifics</a>
-    <a href="#codeswitch">6. Code-Switching</a>
-    <a href="#numerals">7. Numerals</a>
-    <a href="#ablation">8. Ablation Audio</a>
-    <a href="#failures">9. Failure Modes</a>
-    <a href="#crosslingual">10. Cross-Lingual</a>
+    <a href="#longform">1. Long-Form Synthesis</a>
+    <a href="#juktakkhor">2. Juktakkhor</a>
+    <a href="#honorifics">3. Honorifics</a>
+    <a href="#codeswitch">4. Code-Switching</a>
+    <a href="#numerals">5. Numerals</a>
+    <a href="#ablation">6. Ablation Audio</a>
+    <a href="#failures">7. Failure Modes</a>
+    <a href="#crosslingual">8. Cross-Lingual</a>
     <a href="#bibtex">BibTeX</a>
   </div>
 </nav>
 
 <main class="container">
 
-<!-- ==================== SECTION 1: MAIN COMPARISON ==================== -->
-<section id="main">
-  <h2>1. Headline System Comparison</h2>
-  <p class="section-desc">
-    The same 5 Bangla utterances synthesized by all 5 baselines, BanglaBox, and the human ground truth.
-    Best viewed left-to-right: <strong>Human GT</strong> → <strong>BanglaBox</strong> → 5 baselines.
-    Subjective ratings (24 evaluators, 95% CI): BanglaBox achieves Naturalness 4.56±0.16, beating every baseline (p&lt;0.01, Wilcoxon).
-  </p>
-
-  <div class="table-scroll">
-  <table class="compare">
-    <thead>
-      <tr>
-        <th class="text-col">Domain / Bangla Text</th>
-        <th>Human GT</th>
-        <th class="ours">BanglaBox</th>
-        <th>Google TTS</th>
-        <th>Azure TTS</th>
-        <th>Narakeet</th>
-        <th>IndicF5</th>
-        <th>YourTTS&nbsp;(FT)</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td class="text-col">
-          <div class="domain-tag">News</div>
-          <div class="bangla">বাংলাদেশ ব্যাংক আজ নতুন মুদ্রানীতি ঘোষণা করেছে।</div>
-          <div class="gloss">"Bangladesh Bank announced its new monetary policy today."</div>
-        </td>
-        <td><audio controls preload="none"><source src="samples/main/utt01-news/human.wav" type="audio/wav"></audio></td>
-        <td class="ours"><audio controls preload="none"><source src="samples/main/utt01-news/banglabox.wav" type="audio/wav"></audio></td>
-        <td><audio controls preload="none"><source src="samples/main/utt01-news/google.wav" type="audio/wav"></audio></td>
-        <td><audio controls preload="none"><source src="samples/main/utt01-news/azure.wav" type="audio/wav"></audio></td>
-        <td><audio controls preload="none"><source src="samples/main/utt01-news/narakeet.wav" type="audio/wav"></audio></td>
-        <td><audio controls preload="none"><source src="samples/main/utt01-news/indicf5.wav" type="audio/wav"></audio></td>
-        <td><audio controls preload="none"><source src="samples/main/utt01-news/yourtts.wav" type="audio/wav"></audio></td>
-      </tr>
-      <tr>
-        <td class="text-col">
-          <div class="domain-tag">Customer Care</div>
-          <div class="bangla">আমাদের পরিষেবা সম্পর্কে আপনার কোন প্রশ্ন থাকলে জানান।</div>
-          <div class="gloss">"Let us know if you have any questions about our service."</div>
-        </td>
-        <td><audio controls preload="none"><source src="samples/main/utt02-custcare/human.wav" type="audio/wav"></audio></td>
-        <td class="ours"><audio controls preload="none"><source src="samples/main/utt02-custcare/banglabox.wav" type="audio/wav"></audio></td>
-        <td><audio controls preload="none"><source src="samples/main/utt02-custcare/google.wav" type="audio/wav"></audio></td>
-        <td><audio controls preload="none"><source src="samples/main/utt02-custcare/azure.wav" type="audio/wav"></audio></td>
-        <td><audio controls preload="none"><source src="samples/main/utt02-custcare/narakeet.wav" type="audio/wav"></audio></td>
-        <td><audio controls preload="none"><source src="samples/main/utt02-custcare/indicf5.wav" type="audio/wav"></audio></td>
-        <td><audio controls preload="none"><source src="samples/main/utt02-custcare/yourtts.wav" type="audio/wav"></audio></td>
-      </tr>
-      <tr>
-        <td class="text-col">
-          <div class="domain-tag">Teaching</div>
-          <div class="bangla">আজকের পাঠে আমরা পদার্থবিজ্ঞানের গতির সূত্র শিখব।</div>
-          <div class="gloss">"In today's lesson we will learn the laws of motion in physics."</div>
-        </td>
-        <td><audio controls preload="none"><source src="samples/main/utt03-teaching/human.wav" type="audio/wav"></audio></td>
-        <td class="ours"><audio controls preload="none"><source src="samples/main/utt03-teaching/banglabox.wav" type="audio/wav"></audio></td>
-        <td><audio controls preload="none"><source src="samples/main/utt03-teaching/google.wav" type="audio/wav"></audio></td>
-        <td><audio controls preload="none"><source src="samples/main/utt03-teaching/azure.wav" type="audio/wav"></audio></td>
-        <td><audio controls preload="none"><source src="samples/main/utt03-teaching/narakeet.wav" type="audio/wav"></audio></td>
-        <td><audio controls preload="none"><source src="samples/main/utt03-teaching/indicf5.wav" type="audio/wav"></audio></td>
-        <td><audio controls preload="none"><source src="samples/main/utt03-teaching/yourtts.wav" type="audio/wav"></audio></td>
-      </tr>
-      <tr>
-        <td class="text-col">
-          <div class="domain-tag">Healthcare</div>
-          <div class="bangla">প্রতিদিন তিনবার, খাবারের পরে এই ওষুধটি সেবন করবেন।</div>
-          <div class="gloss">"Take this medication three times a day, after meals."</div>
-        </td>
-        <td><audio controls preload="none"><source src="samples/main/utt04-health/human.wav" type="audio/wav"></audio></td>
-        <td class="ours"><audio controls preload="none"><source src="samples/main/utt04-health/banglabox.wav" type="audio/wav"></audio></td>
-        <td><audio controls preload="none"><source src="samples/main/utt04-health/google.wav" type="audio/wav"></audio></td>
-        <td><audio controls preload="none"><source src="samples/main/utt04-health/azure.wav" type="audio/wav"></audio></td>
-        <td><audio controls preload="none"><source src="samples/main/utt04-health/narakeet.wav" type="audio/wav"></audio></td>
-        <td><audio controls preload="none"><source src="samples/main/utt04-health/indicf5.wav" type="audio/wav"></audio></td>
-        <td><audio controls preload="none"><source src="samples/main/utt04-health/yourtts.wav" type="audio/wav"></audio></td>
-      </tr>
-      <tr>
-        <td class="text-col">
-          <div class="domain-tag">E-commerce / IT</div>
-          <div class="bangla">আপনার অর্ডার নম্বর সাত-চার-দুই-তিন আগামী রবিবার ডেলিভারি হবে।</div>
-          <div class="gloss">"Your order number 7-4-2-3 will be delivered next Sunday."</div>
-        </td>
-        <td><audio controls preload="none"><source src="samples/main/utt05-ecom/human.wav" type="audio/wav"></audio></td>
-        <td class="ours"><audio controls preload="none"><source src="samples/main/utt05-ecom/banglabox.wav" type="audio/wav"></audio></td>
-        <td><audio controls preload="none"><source src="samples/main/utt05-ecom/google.wav" type="audio/wav"></audio></td>
-        <td><audio controls preload="none"><source src="samples/main/utt05-ecom/azure.wav" type="audio/wav"></audio></td>
-        <td><audio controls preload="none"><source src="samples/main/utt05-ecom/narakeet.wav" type="audio/wav"></audio></td>
-        <td><audio controls preload="none"><source src="samples/main/utt05-ecom/indicf5.wav" type="audio/wav"></audio></td>
-        <td><audio controls preload="none"><source src="samples/main/utt05-ecom/yourtts.wav" type="audio/wav"></audio></td>
-      </tr>
-    </tbody>
-  </table>
-  </div>
-</section>
-
-<!-- ==================== SECTION 2: VOICE CLONING ==================== -->
-<section id="cloning">
-  <h2>2. Zero-Shot Voice Cloning — 6 Held-Out Speakers</h2>
-  <p class="section-desc">
-    Six held-out speakers (never seen during training) cloned from short reference clips.
-    All synthesize the same sentence: <span class="bangla">"আজকের আবহাওয়া বেশ সুন্দর। বাজার থেকে তাজা সবজি কিনে এনেছি।"</span>
-    <br><span class="gloss">"Today's weather is quite nice. I bought fresh vegetables from the market."</span><br>
-    BanglaBox achieves SECS <strong>0.63</strong> at 10s ref — compare how 5s vs. 10s reference improves speaker similarity.
-  </p>
-
-  <div class="speaker-grid">
-
-    <!-- Speaker 1: Titu (Male) -->
-    <div class="speaker-card">
-      <h3>Titu <small>— Male · Studio</small></h3>
-      <div class="ref-row">
-        <div><strong>5s ref:</strong> <audio controls preload="none"><source src="samples/cloning/spk01/ref-5s.wav" type="audio/wav"></audio></div>
-        <div><strong>10s ref:</strong> <audio controls preload="none"><source src="samples/cloning/spk01/ref-10s.wav" type="audio/wav"></audio></div>
-      </div>
-      <table class="compare mini">
-        <thead><tr><th>BanglaBox (5s ref)</th><th>BanglaBox (10s ref)</th></tr></thead>
-        <tbody>
-          <tr class="ours">
-            <td><audio controls preload="none"><source src="samples/cloning/spk01/banglabox-5s.wav" type="audio/wav"></audio></td>
-            <td><audio controls preload="none"><source src="samples/cloning/spk01/banglabox-10s.wav" type="audio/wav"></audio></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Speaker 2: Tasnim Jara (Female) -->
-    <div class="speaker-card">
-      <h3>Tasnim Jara <small>— Female · Presenter</small></h3>
-      <div class="ref-row">
-        <div><strong>5s ref:</strong> <audio controls preload="none"><source src="samples/cloning/spk02/ref-5s.wav" type="audio/wav"></audio></div>
-        <div><strong>10s ref:</strong> <audio controls preload="none"><source src="samples/cloning/spk02/ref-10s.wav" type="audio/wav"></audio></div>
-      </div>
-      <table class="compare mini">
-        <thead><tr><th>BanglaBox (5s ref)</th><th>BanglaBox (10s ref)</th></tr></thead>
-        <tbody>
-          <tr class="ours">
-            <td><audio controls preload="none"><source src="samples/cloning/spk02/banglabox-5s.wav" type="audio/wav"></audio></td>
-            <td><audio controls preload="none"><source src="samples/cloning/spk02/banglabox-10s.wav" type="audio/wav"></audio></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Speaker 3: Tashmiya (Female) -->
-    <div class="speaker-card">
-      <h3>Tashmiya <small>— Female · Expressive</small></h3>
-      <div class="ref-row">
-        <div><strong>5s ref:</strong> <audio controls preload="none"><source src="samples/cloning/spk03/ref-5s.wav" type="audio/wav"></audio></div>
-        <div><strong>10s ref:</strong> <audio controls preload="none"><source src="samples/cloning/spk03/ref-10s.wav" type="audio/wav"></audio></div>
-      </div>
-      <table class="compare mini">
-        <thead><tr><th>BanglaBox (5s ref)</th><th>BanglaBox (10s ref)</th></tr></thead>
-        <tbody>
-          <tr class="ours">
-            <td><audio controls preload="none"><source src="samples/cloning/spk03/banglabox-5s.wav" type="audio/wav"></audio></td>
-            <td><audio controls preload="none"><source src="samples/cloning/spk03/banglabox-10s.wav" type="audio/wav"></audio></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Speaker 4: Munzarin (Female) -->
-    <div class="speaker-card">
-      <h3>Munzarin <small>— Female · Conversational</small></h3>
-      <div class="ref-row">
-        <div><strong>5s ref:</strong> <audio controls preload="none"><source src="samples/cloning/spk04/ref-5s.wav" type="audio/wav"></audio></div>
-        <div><strong>10s ref:</strong> <audio controls preload="none"><source src="samples/cloning/spk04/ref-10s.wav" type="audio/wav"></audio></div>
-      </div>
-      <table class="compare mini">
-        <thead><tr><th>BanglaBox (5s ref)</th><th>BanglaBox (10s ref)</th></tr></thead>
-        <tbody>
-          <tr class="ours">
-            <td><audio controls preload="none"><source src="samples/cloning/spk04/banglabox-5s.wav" type="audio/wav"></audio></td>
-            <td><audio controls preload="none"><source src="samples/cloning/spk04/banglabox-10s.wav" type="audio/wav"></audio></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Speaker 5: Muzarin (Female) -->
-    <div class="speaker-card">
-      <h3>Muzarin <small>— Female · News register</small></h3>
-      <div class="ref-row">
-        <div><strong>5s ref:</strong> <audio controls preload="none"><source src="samples/cloning/spk05/ref-5s.wav" type="audio/wav"></audio></div>
-        <div><strong>10s ref:</strong> <audio controls preload="none"><source src="samples/cloning/spk05/ref-10s.wav" type="audio/wav"></audio></div>
-      </div>
-      <table class="compare mini">
-        <thead><tr><th>BanglaBox (5s ref)</th><th>BanglaBox (10s ref)</th></tr></thead>
-        <tbody>
-          <tr class="ours">
-            <td><audio controls preload="none"><source src="samples/cloning/spk05/banglabox-5s.wav" type="audio/wav"></audio></td>
-            <td><audio controls preload="none"><source src="samples/cloning/spk05/banglabox-10s.wav" type="audio/wav"></audio></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Speaker 6: 10minschool (Male) -->
-    <div class="speaker-card">
-      <h3>10 Minute School <small>— Male · Educational</small></h3>
-      <div class="ref-row">
-        <div><strong>5s ref:</strong> <audio controls preload="none"><source src="samples/cloning/spk06/ref-5s.wav" type="audio/wav"></audio></div>
-        <div><strong>10s ref:</strong> <audio controls preload="none"><source src="samples/cloning/spk06/ref-10s.wav" type="audio/wav"></audio></div>
-      </div>
-      <table class="compare mini">
-        <thead><tr><th>BanglaBox (5s ref)</th><th>BanglaBox (10s ref)</th></tr></thead>
-        <tbody>
-          <tr class="ours">
-            <td><audio controls preload="none"><source src="samples/cloning/spk06/banglabox-5s.wav" type="audio/wav"></audio></td>
-            <td><audio controls preload="none"><source src="samples/cloning/spk06/banglabox-10s.wav" type="audio/wav"></audio></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-  </div>
-</section>
-
 <!-- ==================== SECTION 3: LONG-FORM ==================== -->
 <section id="longform">
-  <h2>3. Long-Form Multi-Sentence Synthesis</h2>
+  <h2>1. Long-Form Multi-Sentence Synthesis</h2>
   <p class="section-desc">
     Naive autoregressive decoding hits the 850-token training cap or drifts on multi-sentence Bangla.
     Our chunked pipeline splits on Bangla terminators (। ! ?), generates per-sentence with shared speaker conditioning, applies Silero-VAD tail trimming, and inserts deterministic 200ms inter-sentence pauses.
@@ -335,7 +101,7 @@
 
 <!-- ==================== SECTION 4: JUKTAKKHOR ==================== -->
 <section id="juktakkhor">
-  <h2>4. Bangla Edge Cases — Juktakkhor (Conjunct Clusters)</h2>
+  <h2>2. Bangla Edge Cases — Juktakkhor (Conjunct Clusters)</h2>
   <p class="section-desc">
     Bangla has ~300 valid juktakkhor (consonant conjuncts) — many appear as single complex glyphs requiring careful G2P. Multilingual TTS systems often mispronounce or skip these.
   </p>
@@ -360,7 +126,7 @@
 
 <!-- ==================== SECTION 5: HONORIFICS ==================== -->
 <section id="honorifics">
-  <h2>5. Bangla Edge Cases — Honorific Abbreviation Expansion</h2>
+  <h2>3. Bangla Edge Cases — Honorific Abbreviation Expansion</h2>
   <p class="section-desc">
     Bangla literature uses culturally-significant abbreviations (e.g., <span class="bangla">সাঃ</span> for <span class="bangla">সাল্লাল্লাহু আলাইহি ওয়া সাল্লাম</span>, <span class="bangla">রাঃ</span> for <span class="bangla">রাদিয়াল্লাহু আনহু</span>) absent from standard normalization toolchains. BanglaBox includes a curated honorific dictionary in its text normalization pipeline.
   </p>
@@ -385,7 +151,7 @@
 
 <!-- ==================== SECTION 6: CODE-SWITCHING ==================== -->
 <section id="codeswitch">
-  <h2>6. Bangla Edge Cases — Banglish Code-Switching</h2>
+  <h2>4. Bangla Edge Cases — Banglish Code-Switching</h2>
   <p class="section-desc">
     Modern Bangla speech routinely embeds English loanwords (laptop, meeting, WhatsApp, etc.) within Bangla syntax. Both the orthography and prosody flip mid-sentence.
   </p>
@@ -410,7 +176,7 @@
 
 <!-- ==================== SECTION 7: NUMERALS ==================== -->
 <section id="numerals">
-  <h2>7. Bangla Edge Cases — Numerals & Currency</h2>
+  <h2>5. Bangla Edge Cases — Numerals & Currency</h2>
   <p class="section-desc">
     Numbers in Bangla require both digit-to-word conversion (handled by <code>bnnumerizer</code>) and contextual reading (currency, phone numbers, postal codes, dates). BanglaBox routes through a Bengali numeral expansion module before tokenization.
   </p>
@@ -435,7 +201,7 @@
 
 <!-- ==================== SECTION 8: ABLATION ==================== -->
 <section id="ablation">
-  <h2>8. Ablation Audio</h2>
+  <h2>6. Ablation Audio</h2>
   <p class="section-desc">
     Audio counterparts to Table 6 in the paper. Each row removes one component; listen for the qualitative degradation that the quantitative metrics measure.
   </p>
@@ -474,7 +240,7 @@
 
 <!-- ==================== SECTION 9: FAILURE MODES ==================== -->
 <section id="failures">
-  <h2>9. Failure Modes (Honest Examples)</h2>
+  <h2>7. Failure Modes (Honest Examples)</h2>
   <p class="section-desc">
     BanglaBox is not perfect. We document three reproducible failure categories from §6 of the paper, with audio.
   </p>
@@ -508,7 +274,7 @@
 
 <!-- ==================== SECTION 10: CROSS-LINGUAL ==================== -->
 <section id="crosslingual">
-  <h2>10. Cross-Lingual Reference Cloning <small>(bonus)</small></h2>
+  <h2>8. Cross-Lingual Reference Cloning <small>(bonus)</small></h2>
   <p class="section-desc">
     Because Chatterbox's voice encoder is language-agnostic, BanglaBox can clone a non-Bangla speaker's voice into Bangla output without any further training. We demonstrate with English, Hindi, and Spanish references. <em>This capability is not formally evaluated in the paper.</em>
   </p>
