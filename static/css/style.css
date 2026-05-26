@@ -433,6 +433,72 @@ td audio { min-width: 160px; max-width: 220px; }
 
 .cross-card .ours { padding: 8px 10px; background: var(--ours-bg); border-radius: 4px; }
 
+/* ==================== HERO TONGUE-TWISTER STRESS TEST ==================== */
+.hero-sample {
+  background: linear-gradient(135deg, #fff7ed 0%, #fff1e6 100%);
+  border: 2px solid #f59e0b;
+  border-radius: 12px;
+  padding: 28px 32px;
+  margin-bottom: 32px;
+  box-shadow: 0 4px 18px rgba(245, 158, 11, 0.10);
+  position: relative;
+}
+
+.hero-sample-badge {
+  display: inline-block;
+  background: #f59e0b;
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 20px;
+  margin-bottom: 12px;
+}
+
+.hero-sample h2 {
+  color: #b45309;
+  margin-top: 0;
+  margin-bottom: 12px;
+}
+
+.hero-sample .section-desc {
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.hero-sample .section-desc strong {
+  color: #92400e;
+}
+
+.hero-points {
+  margin: 12px 0 16px 18px;
+  padding: 0;
+}
+
+.hero-points li {
+  margin-bottom: 8px;
+  line-height: 1.55;
+  color: #444;
+}
+
+.hero-points li strong {
+  color: #92400e;
+}
+
+.hero-audio-wrap {
+  background: white;
+  border: 1px solid #fcd9a3;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-top: 16px;
+}
+
+.hero-audio-wrap audio {
+  width: 100%;
+}
+
 /* ==================== SINGLE-AUDIO GRID (juktakkhor / honorifics / numerals) ==================== */
 .single-grid {
   display: grid;

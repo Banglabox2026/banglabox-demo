@@ -41,18 +41,37 @@
 <!-- ==================== TABLE OF CONTENTS ==================== -->
 <nav class="toc-bar" id="toc">
   <div class="container">
-    <a href="#longform">1. Long-Form Synthesis</a>
-    <a href="#literature">2. Literary Bangla</a>
-    <a href="#reference">3. Reference Voice</a>
+    <a href="#tongue-twister">★ Tongue-Twister Challenge</a>
+    <a href="#longform">2. Long-Form Synthesis</a>
+    <a href="#literature">3. Literary Bangla</a>
     <a href="#bibtex">BibTeX</a>
   </div>
 </nav>
 
 <main class="container">
 
+<!-- ==================== HERO: TONGUE-TWISTER CHALLENGE ==================== -->
+<section id="tongue-twister" class="hero-sample">
+  <div class="hero-sample-badge">★ Featured Stress Test</div>
+  <h2>Tongue-Twister Challenge — Hardest Bangla Words</h2>
+  <p class="section-desc">
+    This reference clip is a deliberately punishing Bangla tongue-twister — packed with
+    <strong>dense conjunct clusters (juktakkhor)</strong>, retroflex/sibilant chains,
+    rapid syllable alternations, and phonotactically rare segments that trip up most
+    multilingual TTS systems. It plays two roles on this page:
+  </p>
+  <ul class="hero-points">
+    <li><strong>Single canonical reference voice</strong> — every other BanglaBox sample below is zero-shot cloned from this one clip (no per-sample tuning).</li>
+    <li><strong>Speaker-encoder stress test</strong> — if cloning fidelity holds against the hardest Bangla sounds here, the easier sentences below come effortlessly.</li>
+  </ul>
+  <div class="hero-audio-wrap">
+    <audio controls preload="auto"><source src="samples/reference/tongue-twister.wav" type="audio/wav"></audio>
+  </div>
+</section>
+
 <!-- ==================== SECTION 1: LONG-FORM ==================== -->
 <section id="longform">
-  <h2>1. Long-Form Multi-Sentence Synthesis</h2>
+  <h2>2. Long-Form Multi-Sentence Synthesis</h2>
   <p class="section-desc">
     Naive autoregressive decoding hits the 850-token training cap or drifts on multi-sentence Bangla.
     Our chunked pipeline splits on Bangla terminators (। ! ?), generates per-sentence with shared speaker conditioning, applies Silero-VAD tail trimming, and inserts deterministic 200ms inter-sentence pauses.
@@ -96,7 +115,7 @@
 
 <!-- ==================== SECTION 2: LITERATURE ==================== -->
 <section id="literature">
-  <h2>2. Literary Bangla — Multi-Sentence Examples</h2>
+  <h2>3. Literary Bangla — Multi-Sentence Examples</h2>
   <p class="section-desc">
     Literary-prose Bangla showcasing BanglaBox on natural multi-sentence content with rich vocabulary, conjunct clusters, and atmospheric expressives (onomatopoeia). Same single canonical voice throughout.
   </p>
@@ -125,18 +144,6 @@
       </div>
       <audio controls preload="none"><source src="samples/literature/03-onomatopoeia.wav" type="audio/wav"></audio>
     </div>
-  </div>
-</section>
-
-<!-- ==================== SECTION 3: REFERENCE VOICE ==================== -->
-<section id="reference">
-  <h2>3. Reference Voice</h2>
-  <p class="section-desc">
-    The single canonical reference clip used to drive every BanglaBox sample on this page. All output above is cloned from this short Bangla recording — no per-sample re-tuning, no speaker prompts beyond this clip.
-  </p>
-  <div class="longform-item" style="max-width: 480px;">
-    <h4>Tongue-twister reference</h4>
-    <audio controls preload="none"><source src="samples/reference/tongue-twister.wav" type="audio/wav"></audio>
   </div>
 </section>
 
