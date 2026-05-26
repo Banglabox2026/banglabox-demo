@@ -41,11 +41,14 @@
 <!-- ==================== TABLE OF CONTENTS ==================== -->
 <nav class="toc-bar" id="toc">
   <div class="container">
-    <a href="#longform">1. Long-Form</a>
+    <a href="#longform">1. Long-Form Synthesis</a>
     <a href="#juktakkhor">2. Juktakkhor</a>
     <a href="#honorifics">3. Honorifics</a>
-    <a href="#numerals">4. Numerals</a>
-    <a href="#multidomain">5. Multi-Domain</a>
+    <a href="#codeswitch">4. Code-Switching</a>
+    <a href="#numerals">5. Numerals</a>
+    <a href="#ablation">6. Ablation Audio</a>
+    <a href="#failures">7. Failure Modes</a>
+    <a href="#crosslingual">8. Cross-Lingual</a>
     <a href="#bibtex">BibTeX</a>
   </div>
 </nav>
@@ -54,144 +57,242 @@
 
 <!-- ==================== SECTION 1: LONG-FORM ==================== -->
 <section id="longform">
-  <h2>1. Long-Form Multi-Sentence Examples</h2>
+  <h2>1. Long-Form Multi-Sentence Synthesis</h2>
   <p class="section-desc">
-    Multi-sentence Bangla recordings from the BanglaBox training corpus. Long-form content stresses prosody, inter-sentence pause modelling, and the chunked-inference pipeline described in paper §4.2.
+    Naive autoregressive decoding hits the 850-token training cap or drifts on multi-sentence Bangla.
+    Our chunked pipeline splits on Bangla terminators (। ! ?), generates per-sentence with shared speaker conditioning, applies Silero-VAD tail trimming, and inserts deterministic 200ms inter-sentence pauses.
   </p>
 
   <div class="longform-grid">
     <div class="longform-item">
-      <h4>Paragraph 1 — Customer-care introduction</h4>
+      <h4>Paragraph 1 — News (4 sentences)</h4>
       <div class="bangla longform-text">
-        আমার নাম হলো রাহুল। আমি একজন ক্লায়েন্ট কার্যালয়ের কর্মকর্তা।
+        ঢাকা শহরে আজ সকাল থেকেই বৃষ্টি হচ্ছে। আবহাওয়া অধিদপ্তর জানিয়েছে আগামী তিন দিন এই অবস্থা চলতে পারে। নাগরিকদের ছাতা সঙ্গে রাখার পরামর্শ দেওয়া হয়েছে। জরুরি প্রয়োজন ছাড়া বাইরে না যাওয়াই ভালো।
       </div>
-      <audio controls preload="none"><source src="samples/longform/01-introduction.wav" type="audio/wav"></audio>
+      <div class="longform-comparison">
+        <div><strong>Naive single-pass</strong> <span class="pill-na">N/A</span></div>
+        <div class="ours"><strong>BanglaBox chunked pipeline</strong> <audio controls preload="none"><source src="samples/longform/para01-news/banglabox-chunked.wav" type="audio/wav"></audio></div>
+      </div>
     </div>
 
     <div class="longform-item">
-      <h4>Paragraph 2 — Business / financial confirmation</h4>
+      <h4>Paragraph 2 — Literary / instructional (3 sentences)</h4>
       <div class="bangla longform-text">
-        আমাদের কাছে আপনার আর্থিক তথ্য আছে। আপনার অর্ডারটি সম্পূর্ণ হয়েছে।
+        বিজ্ঞানের অগ্রগতির ফলে আমাদের জীবনযাত্রা সম্পূর্ণ বদলে গেছে। চিকিৎসা, যোগাযোগ এবং শিক্ষার ক্ষেত্রে এই পরিবর্তন সবচেয়ে স্পষ্ট। তবু প্রকৃতির সঙ্গে সম্পর্ক না হারানোই আমাদের কর্তব্য।
       </div>
-      <audio controls preload="none"><source src="samples/longform/02-business.wav" type="audio/wav"></audio>
+      <div class="longform-comparison">
+        <div><strong>Naive single-pass</strong> <span class="pill-na">N/A</span></div>
+        <div class="ours"><strong>BanglaBox chunked pipeline</strong> <audio controls preload="none"><source src="samples/longform/para02-literary/banglabox-chunked.wav" type="audio/wav"></audio></div>
+      </div>
     </div>
 
     <div class="longform-item">
-      <h4>Paragraph 3 — Closing / thanks</h4>
+      <h4>Paragraph 3 — Conversational customer care (5 turns)</h4>
       <div class="bangla longform-text">
-        ধন্যবাদ, আপনি সহায়তা করার জন্য। আমরা আপনার জন্য খুব কিছু করব।
+        হ্যালো, আমি কাস্টমার কেয়ার থেকে বলছি। আপনার অভিযোগটি আমরা পেয়েছি। সমস্যাটি সমাধানের জন্য আমাদের একটু সময় দিন। আজ বিকেলের মধ্যেই আপনাকে কল করব। ধন্যবাদ আমাদের সঙ্গে যোগাযোগ করার জন্য।
       </div>
-      <audio controls preload="none"><source src="samples/longform/03-thanks.wav" type="audio/wav"></audio>
+      <div class="longform-comparison">
+        <div><strong>Naive single-pass</strong> <span class="pill-na">N/A</span></div>
+        <div class="ours"><strong>BanglaBox chunked pipeline</strong> <audio controls preload="none"><source src="samples/longform/para03-conv/banglabox-chunked.wav" type="audio/wav"></audio></div>
+      </div>
     </div>
   </div>
 </section>
 
 <!-- ==================== SECTION 2: JUKTAKKHOR ==================== -->
 <section id="juktakkhor">
-  <h2>2. Juktakkhor (Conjunct-Cluster) Examples</h2>
+  <h2>2. Bangla Edge Cases — Juktakkhor (Conjunct Clusters)</h2>
   <p class="section-desc">
-    Bangla has ~300 valid juktakkhor (consonant conjuncts) — many appear as single complex glyphs. Corpus samples below stress the conjunct inventory.
+    Bangla has ~300 valid juktakkhor (consonant conjuncts) — many appear as single complex glyphs requiring careful G2P. Multilingual TTS systems often mispronounce or skip these.
   </p>
-  <div class="single-grid">
-    <div class="single-card">
-      <div class="bangla">হল্যাণ্ডে বিশ্ববিদ্যালয়ে স্বাস্থ্য বিজ্ঞানে অনেক বিভিন্ন প্রকল্প চলছে।</div>
-      <div class="gloss">Clusters: ণ্ড, শ্ব, ব্ব, স্থ, জ্ঞ, ল্প</div>
-      <audio controls preload="none"><source src="samples/edge/juktakkhor/ex01.wav" type="audio/wav"></audio>
-    </div>
-    <div class="single-card">
-      <div class="bangla">একটি স্বাস্থ্যকর জীবনযাপন শুধুমাত্র সময় এবং সংস্কৃতির মধ্যে নয়।</div>
-      <div class="gloss">Clusters: স্থ, ত্র, ক্ৃ</div>
-      <audio controls preload="none"><source src="samples/edge/juktakkhor/ex02.wav" type="audio/wav"></audio>
-    </div>
-  </div>
+  <table class="compare">
+    <thead>
+      <tr><th class="text-col">Bangla Text</th><th>Google TTS</th><th class="ours">BanglaBox</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="text-col"><div class="bangla">স্বাস্থ্যকর্মীরা প্রতিদিন কষ্টসাধ্য পরিশ্রম করেন।</div><div class="gloss">"Health-workers do arduous labor daily." (clusters: স্ব, ষ্ট, দ্ধ, শ্র)</div></td>
+        <td><span class="pill-na">N/A</span></td>
+        <td class="ours"><audio controls preload="none"><source src="samples/edge/juktakkhor/ex01-banglabox.wav" type="audio/wav"></audio></td>
+      </tr>
+      <tr>
+        <td class="text-col"><div class="bangla">কৃত্রিম বুদ্ধিমত্তার ক্ষেত্রে অসাধারণ অগ্রগতি ঘটছে।</div><div class="gloss">"Extraordinary progress is happening in AI." (clusters: কৃ, দ্ধ, ক্ষে, গ্র)</div></td>
+        <td><span class="pill-na">N/A</span></td>
+        <td class="ours"><audio controls preload="none"><source src="samples/edge/juktakkhor/ex02-banglabox.wav" type="audio/wav"></audio></td>
+      </tr>
+    </tbody>
+  </table>
 </section>
 
 <!-- ==================== SECTION 3: HONORIFICS ==================== -->
 <section id="honorifics">
-  <h2>3. Honorific / Religious-Address Examples</h2>
+  <h2>3. Bangla Edge Cases — Honorific Abbreviation Expansion</h2>
   <p class="section-desc">
-    Corpus samples containing Bangla religious-address terms (fully expanded forms such as <span class="bangla">সাল্লাল্লাহু আলাইহি ওয়া সাল্লাম</span>) — the longer multi-syllable forms BanglaBox's text-normalization stage expands abbreviations into.
+    Bangla literature uses culturally-significant abbreviations (e.g., <span class="bangla">সাঃ</span> for <span class="bangla">সাল্লাল্লাহু আলাইহি ওয়া সাল্লাম</span>, <span class="bangla">রাঃ</span> for <span class="bangla">রাদিয়াল্লাহু আনহু</span>) absent from standard normalization toolchains. BanglaBox includes a curated honorific dictionary in its text normalization pipeline.
   </p>
-  <div class="single-grid">
-    <div class="single-card">
-      <div class="bangla">মুহাম্মদ সাল্লাল্লাহু আলাইহি ওয়া সাল্লামের উম্মত বিশ্বজুড়ে ছড়িয়ে আছে।</div>
-      <div class="gloss">"The Prophet Muhammad's (peace be upon him) followers are spread across the world."</div>
-      <audio controls preload="none"><source src="samples/edge/honorifics/ex01.wav" type="audio/wav"></audio>
-    </div>
-    <div class="single-card">
-      <div class="bangla">মুহাম্মদ ছিলেন আল্লাহর রাসূল এবং উম্মতের আদর্শ ব্যক্তিত্ব।</div>
-      <div class="gloss">"Muhammad was the Messenger of Allah and the ideal personality of the Ummah."</div>
-      <audio controls preload="none"><source src="samples/edge/honorifics/ex02.wav" type="audio/wav"></audio>
-    </div>
-  </div>
+  <table class="compare">
+    <thead>
+      <tr><th class="text-col">Bangla Text</th><th>Google TTS</th><th class="ours">BanglaBox</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="text-col"><div class="bangla">হযরত মুহাম্মদ সাঃ ছিলেন আল্লাহর শেষ নবী।</div><div class="gloss">"The Prophet Muhammad sallallahu alayhi wa sallam was the last Prophet of Allah." (expansion: সাঃ → সাল্লাল্লাহু আলাইহি ওয়া সাল্লাম)</div></td>
+        <td><span class="pill-na">N/A</span></td>
+        <td class="ours"><audio controls preload="none"><source src="samples/edge/honorifics/ex01-banglabox.wav" type="audio/wav"></audio></td>
+      </tr>
+      <tr>
+        <td class="text-col"><div class="bangla">আবু বকর রাঃ এবং উমর রাঃ ছিলেন সাহাবী।</div><div class="gloss">"Abu Bakr radiyallahu anhu and Umar radiyallahu anhu were Companions." (expansion: রাঃ → রাদিয়াল্লাহু আনহু, twice)</div></td>
+        <td><span class="pill-na">N/A</span></td>
+        <td class="ours"><audio controls preload="none"><source src="samples/edge/honorifics/ex02-banglabox.wav" type="audio/wav"></audio></td>
+      </tr>
+    </tbody>
+  </table>
 </section>
 
-<!-- ==================== SECTION 4: NUMERALS ==================== -->
+<!-- ==================== SECTION 4: CODE-SWITCHING ==================== -->
+<section id="codeswitch">
+  <h2>4. Bangla Edge Cases — Banglish Code-Switching</h2>
+  <p class="section-desc">
+    Modern Bangla speech routinely embeds English loanwords (laptop, meeting, WhatsApp, etc.) within Bangla syntax. Both the orthography and prosody flip mid-sentence.
+  </p>
+  <table class="compare">
+    <thead>
+      <tr><th class="text-col">Bangla Text</th><th>Google TTS</th><th class="ours">BanglaBox</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="text-col"><div class="bangla">আমি কাল office-এ একটা important meeting attend করব।</div><div class="gloss">"I will attend an important meeting at the office tomorrow."</div></td>
+        <td><span class="pill-na">N/A</span></td>
+        <td class="ours"><audio controls preload="none"><source src="samples/edge/codeswitch/ex01-banglabox.wav" type="audio/wav"></audio></td>
+      </tr>
+      <tr>
+        <td class="text-col"><div class="bangla">তুমি কি আমাকে WhatsApp-এ message পাঠিয়েছ?</div><div class="gloss">"Did you send me a message on WhatsApp?"</div></td>
+        <td><span class="pill-na">N/A</span></td>
+        <td class="ours"><audio controls preload="none"><source src="samples/edge/codeswitch/ex02-banglabox.wav" type="audio/wav"></audio></td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ==================== SECTION 5: NUMERALS ==================== -->
 <section id="numerals">
-  <h2>4. Numerals &amp; Currency Examples</h2>
+  <h2>5. Bangla Edge Cases — Numerals &amp; Currency</h2>
   <p class="section-desc">
-    Corpus samples containing Bangla digits and currency expressions — content that BanglaBox's text-normalization stage routes through <code>bnnumerizer</code> for digit-to-word conversion.
+    Numbers in Bangla require both digit-to-word conversion (handled by <code>bnnumerizer</code>) and contextual reading (currency, phone numbers, postal codes, dates). BanglaBox routes through a Bengali numeral expansion module before tokenization.
   </p>
-  <div class="single-grid">
-    <div class="single-card">
-      <div class="bangla">আমার মোবাইল ফোনে ১৫০ টাকা রিচার্জ আছে।</div>
-      <div class="gloss">"My mobile phone has 150 taka recharge."</div>
-      <audio controls preload="none"><source src="samples/edge/numerals/ex01.wav" type="audio/wav"></audio>
+  <table class="compare">
+    <thead>
+      <tr><th class="text-col">Bangla Text</th><th>Google TTS</th><th class="ours">BanglaBox</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="text-col"><div class="bangla">২০২৫ সালে বাংলাদেশের জনসংখ্যা প্রায় ১৭ কোটি ৩০ লাখ।</div><div class="gloss">"In 2025 Bangladesh's population is about 17 crore 30 lakh." (≈173 million)</div></td>
+        <td><span class="pill-na">N/A</span></td>
+        <td class="ours"><audio controls preload="none"><source src="samples/edge/numerals/ex01-banglabox.wav" type="audio/wav"></audio></td>
+      </tr>
+      <tr>
+        <td class="text-col"><div class="bangla">আমার ফোন নম্বর ০১৭১১-২৩৪৫৬৭, পিন কোড ১২০৭।</div><div class="gloss">"My phone is 01711-234567, postal code 1207." (digit-by-digit reading)</div></td>
+        <td><span class="pill-na">N/A</span></td>
+        <td class="ours"><audio controls preload="none"><source src="samples/edge/numerals/ex02-banglabox.wav" type="audio/wav"></audio></td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ==================== SECTION 6: ABLATION ==================== -->
+<section id="ablation">
+  <h2>6. Ablation Audio</h2>
+  <p class="section-desc">
+    Audio counterparts to Table 6 in the paper. Each row removes one component; listen for the qualitative degradation that the quantitative metrics measure.
+  </p>
+  <table class="compare">
+    <thead>
+      <tr>
+        <th class="text-col">Configuration</th>
+        <th>Utt 1: <span class="bangla mini-bn">হযরত আদম আঃ ১০০০ বছর বেঁচে ছিলেন।</span></th>
+        <th>Utt 2: <span class="bangla mini-bn">আমার কণ্ঠস্বর শুনে চিনতে পারছ?</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="ours">
+        <td class="text-col"><strong>Full BanglaBox</strong><div class="gloss">Nat 4.56 / CER 2.9 / SECS 0.63</div></td>
+        <td><audio controls preload="none"><source src="samples/ablation/utt01/full.wav" type="audio/wav"></audio></td>
+        <td><audio controls preload="none"><source src="samples/ablation/utt02/full.wav" type="audio/wav"></audio></td>
+      </tr>
+      <tr>
+        <td class="text-col">− Bangla vocab. extension<div class="gloss">Nat 4.39 (Δ−0.17) / CER +14% / SECS 0.60</div></td>
+        <td><span class="pill-na">N/A</span></td>
+        <td><span class="pill-na">N/A</span></td>
+      </tr>
+      <tr>
+        <td class="text-col">− Text normalization<div class="gloss">Nat 4.23 (Δ−0.33) / CER +52% / SECS 0.56</div></td>
+        <td><span class="pill-na">N/A</span></td>
+        <td><span class="pill-na">N/A</span></td>
+      </tr>
+      <tr>
+        <td class="text-col">− Prompt mask<div class="gloss">Nat 4.34 / CER 3.9 / SECS 0.51 (Δ−0.12, largest cloning drop)</div></td>
+        <td><span class="pill-na">N/A</span></td>
+        <td><span class="pill-na">N/A</span></td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ==================== SECTION 7: FAILURE MODES ==================== -->
+<section id="failures">
+  <h2>7. Failure Modes (Honest Examples)</h2>
+  <p class="section-desc">
+    BanglaBox is not perfect. We document three reproducible failure categories from §6 of the paper, with audio.
+  </p>
+
+  <div class="failure-list">
+    <div class="failure-card">
+      <h4>Failure 1 — Rare three-consonant conjuncts (&lt;0.3% of training)</h4>
+      <div class="bangla">উচ্ছৃঙ্খল প্রস্ফুটিত স্ত্রীলিঙ্গ।</div>
+      <div class="gloss">"Unruly blossomed feminine." (cluster: ৃ+ঙ+খ, স্প্র+ফ, স্ত্র)</div>
+      <audio controls preload="none"><source src="samples/failure/f01-rare-conjunct.wav" type="audio/wav"></audio>
+      <p class="diagnosis"><strong>Diagnosis:</strong> The medial র-blend in <span class="bangla">স্ত্র</span> is sometimes dropped or rendered as <span class="bangla">স্ত</span>. Targeted oversampling of rare conjuncts during fine-tuning would address this.</p>
     </div>
-    <div class="single-card">
-      <div class="bangla">আপনি আমাদের পণ্য ১২০ টাকায় কিনতে পারেন।</div>
-      <div class="gloss">"You can buy our product for 120 taka."</div>
-      <audio controls preload="none"><source src="samples/edge/numerals/ex02.wav" type="audio/wav"></audio>
+
+    <div class="failure-card">
+      <h4>Failure 2 — Code-switch boundary artifact</h4>
+      <div class="bangla">আমি email পাঠিয়ে তোমাকে notify করব, please check করো।</div>
+      <div class="gloss">"I'll email and notify you, please check."</div>
+      <audio controls preload="none"><source src="samples/failure/f02-codeswitch.wav" type="audio/wav"></audio>
+      <p class="diagnosis"><strong>Diagnosis:</strong> Brief energy dips at the Bangla→English transition. The <span class="bangla">-করব</span> Bangla suffix on the English verb stem occasionally gets English-ish vowel coloring.</p>
+    </div>
+
+    <div class="failure-card">
+      <h4>Failure 3 — Low-frequency onomatopoeia</h4>
+      <div class="bangla">চারিদিকে শুধু হই-হুল্লোড়, ঝিঁঝিঁ পোকার ডাক, আর শোঁ-শোঁ বাতাস।</div>
+      <div class="gloss">"All around: din, cricket calls, and whistling wind." (rare expressives হই-হুল্লোড়, ঝিঁঝিঁ, শোঁ-শোঁ)</div>
+      <audio controls preload="none"><source src="samples/failure/f03-onomatopoeia.wav" type="audio/wav"></audio>
+      <p class="diagnosis"><strong>Diagnosis:</strong> Repeated-syllable expressives with &lt;5 training occurrences are sometimes truncated or replaced by phoneme-similar but lexically wrong forms.</p>
     </div>
   </div>
 </section>
 
-<!-- ==================== MULTI-DOMAIN SHOWCASE ==================== -->
-<section id="multidomain">
-  <h2>5. Multi-Domain Audio Showcase</h2>
+<!-- ==================== SECTION 8: CROSS-LINGUAL ==================== -->
+<section id="crosslingual">
+  <h2>8. Cross-Lingual Reference Cloning <small>(bonus)</small></h2>
   <p class="section-desc">
-    Eight representative natural-speech samples spanning eight different domains drawn from the BanglaBox training corpus. These ground-truth recordings illustrate the lexical, prosodic, and acoustic diversity that drives our phonetically-balanced corpus design (see paper §3).
+    Because Chatterbox's voice encoder is language-agnostic, BanglaBox can clone a non-Bangla speaker's voice into Bangla output without any further training. We demonstrate with English, Hindi, and Spanish references. <em>This capability is not formally evaluated in the paper.</em>
   </p>
-  <div class="multidomain-grid">
-    <div class="domain-card">
-      <h4>Customer Care / Order</h4>
-      <p class="bn-text">আপনার অর্ডার নম্বরটি আমাকে দিতে পারেন।</p>
-      <audio controls preload="none"><source src="samples/nextlevel-ai/outputs/01-customer-care.wav" type="audio/wav"></audio>
+  <div class="crosslingual-grid">
+    <div class="cross-card">
+      <h4>English reference → Bangla output</h4>
+      <div><strong>Reference (English):</strong> <span class="pill-na">N/A</span></div>
+      <div class="ours"><strong>BanglaBox Bangla output:</strong> <audio controls preload="none"><source src="samples/crosslingual/en-banglabox-out.wav" type="audio/wav"></audio></div>
     </div>
-    <div class="domain-card">
-      <h4>Banking</h4>
-      <p class="bn-text">সকাল নয়টা থেকে বিকেল পাঁচটা পর্যন্ত আমাদের ব্যাংক খোলা।</p>
-      <audio controls preload="none"><source src="samples/nextlevel-ai/outputs/02-banking.wav" type="audio/wav"></audio>
+    <div class="cross-card">
+      <h4>Hindi reference → Bangla output</h4>
+      <div><strong>Reference (Hindi):</strong> <span class="pill-na">N/A</span></div>
+      <div class="ours"><strong>BanglaBox Bangla output:</strong> <audio controls preload="none"><source src="samples/crosslingual/hi-banglabox-out.wav" type="audio/wav"></audio></div>
     </div>
-    <div class="domain-card">
-      <h4>Healthcare</h4>
-      <p class="bn-text">আয়ুর্বেদিক ডাক্তার রোগীর নাড়ি পরীক্ষা করেন।</p>
-      <audio controls preload="none"><source src="samples/nextlevel-ai/outputs/03-healthcare.wav" type="audio/wav"></audio>
-    </div>
-    <div class="domain-card">
-      <h4>Government</h4>
-      <p class="bn-text">সরকারি সেবায় আপনি কী সহায়তা পেতে পারেন?</p>
-      <audio controls preload="none"><source src="samples/nextlevel-ai/outputs/04-government.wav" type="audio/wav"></audio>
-    </div>
-    <div class="domain-card">
-      <h4>Sports</h4>
-      <p class="bn-text">বাংলাদেশ ক্রিকেট দলটি আগামীকাল ম্যাচে অংশ নেবে।</p>
-      <audio controls preload="none"><source src="samples/nextlevel-ai/outputs/05-sports.wav" type="audio/wav"></audio>
-    </div>
-    <div class="domain-card">
-      <h4>Cooking</h4>
-      <p class="bn-text">অ্যাসপারাগাসকে রান্না করার সঠিক সময় প্রায় পাঁচ মিনিট।</p>
-      <audio controls preload="none"><source src="samples/nextlevel-ai/outputs/06-cooking.wav" type="audio/wav"></audio>
-    </div>
-    <div class="domain-card">
-      <h4>Education</h4>
-      <p class="bn-text">একশ জন ছাত্র আজকের পরীক্ষায় অংশগ্রহণ করবে।</p>
-      <audio controls preload="none"><source src="samples/nextlevel-ai/outputs/07-education.wav" type="audio/wav"></audio>
-    </div>
-    <div class="domain-card">
-      <h4>Technology</h4>
-      <p class="bn-text">প্রোগ্রামিংয়ে ভালো হতে প্রায় নিয়মিত অনুশীলন করুন।</p>
-      <audio controls preload="none"><source src="samples/nextlevel-ai/outputs/08-technology.wav" type="audio/wav"></audio>
+    <div class="cross-card">
+      <h4>Spanish reference → Bangla output</h4>
+      <div><strong>Reference (Spanish):</strong> <span class="pill-na">N/A</span></div>
+      <div class="ours"><strong>BanglaBox Bangla output:</strong> <audio controls preload="none"><source src="samples/crosslingual/es-banglabox-out.wav" type="audio/wav"></audio></div>
     </div>
   </div>
 </section>
